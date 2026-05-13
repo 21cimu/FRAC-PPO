@@ -17,3 +17,7 @@ conda env create -f environment.yaml
 运行 run_one_PPO_TUC.sh 脚本：
 ```bash
 sh scripts/run_one_PPO.sh
+``````
+
+## seed
+All experiments and statistical analyses were conducted using a fixed random seed of [41] to ensure absolute reproducibility
