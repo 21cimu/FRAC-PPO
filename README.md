@@ -6,8 +6,12 @@ It is worth mentioning that because python runs slowly, we use cuda library to i
 * torch Version: 2.2.1
 * numpy Version: 1.26.4
 * pandas Version: 2.2.3
+
+
 Installation
 conda env create -f environment.yaml
+
+
 Usage
 run scripts of run_one_PPO.sh:
 
