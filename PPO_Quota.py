@@ -394,16 +394,36 @@ class SPGG(nn.Module):
             profit_matrix = torch.tensor(profit_matrix, device=self.device)
         profit_matrix = profit_matrix.cpu().numpy()
 
+        # 保持 8x8 比例，因为移除标注后不需要额外的外部空间
         fig2 = plt.figure(figsize=(8, 8))
         ax2 = fig2.add_subplot(1, 1, 1)
 
         vmin = 0
         vmax = np.ceil(np.maximum(5 * (self.r - 1), 4 * self.r))
+        
+        # 绘制热力图
         im = ax2.imshow(profit_matrix, vmin=vmin, vmax=vmax, cmap='viridis', interpolation='none')
 
+        # --- 核心修改：彻底移除坐标轴标注和刻度线 ---
+        ax2.set_xticks([]) # 移除横轴刻度
+        ax2.set_yticks([]) # 移除纵轴刻度
+        ax2.set_xticklabels([]) # 移除横轴数字
+        ax2.set_yticklabels([]) # 移除纵轴数字
+        # 或者使用 ax2.axis('off')，但那会连边框一起移除
+        # 如果想保留边框但不要标注，用上面四行
+        # ---------------------------------------
+
+        # Colorbar 通常建议保留，否则图像失去数值参考意义
         cbar2 = fig2.colorbar(im, ax=ax2, fraction=0.046, pad=0.04)
-        cbar2.ax.tick_params(labelsize=28)
+        cbar2.ax.tick_params(labelsize=28) # Colorbar 数字保持大号以清晰易读
         cbar2.set_ticks(np.ceil(np.linspace(vmin, vmax, 5)).astype(int))
 
-        fig2.savefig(f'{img_dir}/profit_t={epoch}.pdf', format='pdf', dpi=300, bbox_inches='tight', pad_inches=0)
+        # 保存时使用 pad_inches=0 达到极致的紧凑效果
+        fig2.savefig(
+            f'{img_dir}/profit_t={epoch}.pdf', 
+            format='pdf', 
+            dpi=300, 
+            bbox_inches='tight', 
+            pad_inches=0
+        )
         plt.close(fig2)
